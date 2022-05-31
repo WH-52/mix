@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author wangfei
  * @version 1.0.0
- * @ClassName MIxConfiguration.java
+ * @ClassName MixConfiguration.java
  * @Description UTIL
  * @createTime 2022年05月30日 17:47:00
  */
