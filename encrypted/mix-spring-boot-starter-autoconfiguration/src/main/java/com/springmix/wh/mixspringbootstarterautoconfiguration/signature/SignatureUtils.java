@@ -16,8 +16,10 @@ import java.util.Base64;
  */
 public class SignatureUtils {
 
+    public static final String UTF_8_CHARSET = "UTF-8";
 
     public static final String RSA_ALGORITHM = "RSA";
+
     public static final String SHA256_WITH_RSA = "SHA256withRSA";
 
     /**
@@ -31,7 +33,7 @@ public class SignatureUtils {
         try {
             Signature sig = Signature.getInstance(SHA256_WITH_RSA);
             sig.initSign(KeyPairUtils.getPrivateKey(privateKey));
-            sig.update(data.getBytes("UTF-8"));
+            sig.update(data.getBytes(UTF_8_CHARSET));
             byte[] sByte = sig.sign();
             return Base64.getEncoder().encodeToString(sByte);
         }catch(Exception e){
@@ -52,7 +54,7 @@ public class SignatureUtils {
         try {
             Signature sig = Signature.getInstance(SHA256_WITH_RSA);
             sig.initVerify(KeyPairUtils.getPublicKey(publicKey));
-            sig.update(data.getBytes("UTF-8"));
+            sig.update(data.getBytes(UTF_8_CHARSET));
             Boolean verify  = sig.verify(Base64.getDecoder().decode(signData));
             return verify;
         }catch(Exception e){

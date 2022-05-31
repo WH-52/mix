@@ -24,6 +24,8 @@ import java.util.UUID;
  */
 public class EncryptionUtils {
 
+    public static final String UTF_8_CHARSET = "UTF-8";
+
     public  static final int  AES_KEY_128 = 128;
     public  static final int  AES_KEY_192 = 192;
     public  static final int  AES_KEY_256 = 256;
@@ -36,7 +38,7 @@ public class EncryptionUtils {
 
 
     /**
-     * 数据加密、加签
+     * Data encryption and signing
      * @param data 加密数据
      * @param localPrivateKey 本地私钥
      * @param distancePublicKey 接收方公钥
@@ -236,7 +238,7 @@ public class EncryptionUtils {
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new RuntimeException("解密验签失败--"+e.getMessage());
+            throw new RuntimeException("Decryption and signature verification failed--"+e.getMessage());
         }
     }
 
@@ -252,7 +254,7 @@ public class EncryptionUtils {
         String encodeStr = "";
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(str.getBytes("UTF-8"));
+            messageDigest.update(str.getBytes(UTF_8_CHARSET));
             encodeStr = byte2Hex(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

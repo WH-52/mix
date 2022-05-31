@@ -30,9 +30,9 @@ public class KeyPairUtils {
     public static final String DESEDE_ALGORITHM = "DESEDE";
 
     /**
-     * String[0] = 公钥
-     * String[1] = 私钥
-     * 创建RSA公钥、私钥
+     * String[0] = public key
+     * String[1] = private key
+     * create RSA key
      * @param keySize
      * @return
      */

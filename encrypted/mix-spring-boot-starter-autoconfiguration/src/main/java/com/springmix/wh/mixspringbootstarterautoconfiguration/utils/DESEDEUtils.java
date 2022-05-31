@@ -15,6 +15,7 @@ import java.util.Base64;
  * @createTime 2022年05月31日 14:38:00
  */
 public class DESEDEUtils {
+    public static final String UTF_8_CHARSET = "UTF-8";
 
     private static final String DEFAULT_CIPHER_ALGORITHM = "DESede/ECB/PKCS5Padding";
 
@@ -23,7 +24,7 @@ public class DESEDEUtils {
         try {
             Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, KeyPairUtils.strKeyToSecretKey(key,KeyPairUtils.DESEDE_ALGORITHM));
-            byte[] ct = cipher.doFinal(data.getBytes("UTF-8"));
+            byte[] ct = cipher.doFinal(data.getBytes(UTF_8_CHARSET));
             return Base64.getEncoder().encodeToString(ct);
         }catch(Exception e){
             throw new Exception(KeyPairUtils.DESEDE_ALGORITHM + "Encryption failed --"+e.getMessage());
@@ -35,7 +36,7 @@ public class DESEDEUtils {
             Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, KeyPairUtils.strKeyToSecretKey(key,KeyPairUtils.DESEDE_ALGORITHM));
             byte[] ct = cipher.doFinal(Base64.getDecoder().decode(data));
-            return new String(ct,"UTF-8");
+            return new String(ct,UTF_8_CHARSET);
         }catch(Exception e){
             throw new Exception(KeyPairUtils.DESEDE_ALGORITHM + "Decryption failed --"+e.getMessage());
         }
