@@ -7,12 +7,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author wangfei
  * @version 1.0.0
- * @ClassName AESProperties.java
+ * @ClassName DESEDEAESProperties.java
  * @Description UTIL
  * @createTime 2022年05月30日 17:41:00
  */
-@ConfigurationProperties(prefix = "mix.aes")
-public class AESProperties {
+@ConfigurationProperties(prefix = "mix.desede")
+public class DESEDEAESProperties {
 
     private String key;
 

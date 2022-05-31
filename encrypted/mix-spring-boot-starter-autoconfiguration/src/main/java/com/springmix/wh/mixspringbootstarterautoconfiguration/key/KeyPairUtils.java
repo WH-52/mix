@@ -1,7 +1,12 @@
 package com.springmix.wh.mixspringbootstarterautoconfiguration.key;
 
+import sun.security.provider.Sun;
+
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
@@ -20,8 +25,9 @@ import java.util.Base64;
  */
 public class KeyPairUtils {
 
-    public static final String RSA_ALGORITHM = "RSA"; // ALGORITHM ['ælgərɪð(ə)m] 算法的意思
-    public static final String AES_ALGORITHM = "AES"; // ALGORITHM ['ælgərɪð(ə)m] 算法的意思
+    public static final String RSA_ALGORITHM = "RSA";
+    public static final String AES_ALGORITHM = "AES";
+    public static final String DESEDE_ALGORITHM = "DESEDE";
 
     /**
      * String[0] = 公钥
@@ -37,7 +43,8 @@ public class KeyPairUtils {
             kpg = KeyPairGenerator.getInstance(RSA_ALGORITHM);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("生成非对称公私钥失败--"+e.getMessage());
+            throw new Exception(RSA_ALGORITHM + " Failed to create Key --" + e.getMessage());
+
         }
         // 初始化KeyPairGenerator对象,密钥长度
         kpg.initialize(keySize);
@@ -60,7 +67,7 @@ public class KeyPairUtils {
      * @return
      */
     public static String createKeysAES(int keysize) throws Exception{
-        keysize = keysize == 0 ? 256 : keysize;
+        keysize = (keysize == 0 ? 256 : keysize);
         try{
             KeyGenerator keyGenerator =  KeyGenerator.getInstance(AES_ALGORITHM);
             keyGenerator.init(keysize);
@@ -68,7 +75,26 @@ public class KeyPairUtils {
             return Base64.getEncoder().encodeToString(secretKey.getEncoded());
         }catch(Exception e){
             e.printStackTrace();
-            throw new Exception("生成对称秘钥SecretKey失败--"+e.getMessage());
+            throw new Exception(AES_ALGORITHM + " Failed to create SecretKey --" + e.getMessage());
+        }
+    }
+
+
+    /**
+     * 创建对称秘钥DESEDE
+     * @param key  对称秘钥种子
+     * @return
+     */
+    public static String createKeyDESEDE(String key) throws Exception{
+        try{
+
+            DESedeKeySpec deSedeKeySpec = new DESedeKeySpec(initKey(key));
+            SecretKeyFactory secretKeyFactory =  SecretKeyFactory.getInstance(DESEDE_ALGORITHM);
+            SecretKey secretKey =  secretKeyFactory.generateSecret(deSedeKeySpec);
+            return Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception(DESEDE_ALGORITHM + " Failed to create SecretKey --" + e.getMessage());
         }
     }
 
@@ -78,22 +104,22 @@ public class KeyPairUtils {
      * @param key
      * @return
      */
-    public static SecretKey strKeyToSecretKey(String key)throws Exception{
+    public static SecretKey strKeyToSecretKey(String key,String algorithm)throws Exception{
         try {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.getDecoder().decode(key),AES_ALGORITHM);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.getDecoder().decode(key),algorithm);
             return secretKeySpec;
         }catch (Exception e){
             e.printStackTrace();
-            throw new Exception("字符串转秘钥AES失败--"+e.getMessage());
-
+            throw new Exception(algorithm + " Key character conversion failed --" + e.getMessage());
         }
 
     }
 
 
 
+
     /**
-     * 得到私钥
+     * get Key
      * @param privateKey  密钥字符串（经过base64编码）
      * @throws Exception
      */
@@ -117,6 +143,20 @@ public class KeyPairUtils {
         RSAPublicKey key = (RSAPublicKey) keyFactory.generatePublic(x509KeySpec);
         return key;
     }
+
+
+    private static byte[] initKey(String key){
+        byte[] bytes = key.getBytes();
+        if(bytes.length < 24){
+            byte[] b = new byte[24];
+            for(int i = 0 ;i < b.length;i++){
+                b[i] = bytes[i % bytes.length];
+            }
+            bytes = b;
+        }
+        return bytes;
+    }
+
 
 
 

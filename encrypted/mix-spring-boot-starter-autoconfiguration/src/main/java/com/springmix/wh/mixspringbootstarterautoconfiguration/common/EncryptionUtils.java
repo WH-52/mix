@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.springmix.wh.mixspringbootstarterautoconfiguration.key.KeyPairUtils;
 import com.springmix.wh.mixspringbootstarterautoconfiguration.signature.SignatureUtils;
 import com.springmix.wh.mixspringbootstarterautoconfiguration.utils.AESUtils;
+import com.springmix.wh.mixspringbootstarterautoconfiguration.utils.DESEDEUtils;
 import com.springmix.wh.mixspringbootstarterautoconfiguration.utils.RSAUtils;
 
 import java.security.MessageDigest;
@@ -30,6 +31,8 @@ public class EncryptionUtils {
     private String privateKey;
 
     private List<String> publicKey;
+
+    private String desedeKey;
 
 
     /**
@@ -169,6 +172,34 @@ public class EncryptionUtils {
         }
         return  encryption(data,privateKey,publicKey.get(index),AES_KEY_128);
     }
+
+
+
+    public  String desedeEncryption(String data)throws Exception{
+        String key = KeyPairUtils.createKeyDESEDE(desedeKey);
+        String msg = DESEDEUtils.encryption(key,data);
+        return  msg;
+    }
+
+    public  String desedeEncryption(String data,String key)throws Exception{
+        key = KeyPairUtils.createKeyDESEDE(key);
+        String msg = DESEDEUtils.encryption(key,data);
+        return  msg;
+    }
+
+    public  String desedeDecrypt(String data)throws Exception{
+        String key = KeyPairUtils.createKeyDESEDE(desedeKey);
+        String msg = DESEDEUtils.decrypt(key,data);
+        return  msg;
+    }
+
+    public  String desedeDecrypt(String data,String key)throws Exception{
+        key = KeyPairUtils.createKeyDESEDE(key);
+        String msg = DESEDEUtils.decrypt(key,data);
+        return  msg;
+    }
+
+
     /**
      * 数据解密验签
      * @param data 加密数据
@@ -253,6 +284,8 @@ public class EncryptionUtils {
 
 
 
+
+
     public void setPrivateKey(String privateKey) {
         this.privateKey = privateKey;
     }
@@ -260,6 +293,11 @@ public class EncryptionUtils {
 
     public void setPublicKey(List<String> publicKey) {
         this.publicKey = publicKey;
+    }
+
+
+    public void setDesedeKey(String desedeKey) {
+        this.desedeKey = desedeKey;
     }
 }
 
